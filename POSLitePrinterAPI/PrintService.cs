@@ -12,43 +12,6 @@ namespace POSLitePrinterAPI
     public class PrintService
     {
         public static String Line = "------------------------------------------------";
-        public static void Prueba(String Printer_Address) {
-            var printer = new NetworkPrinter(ipAddress: "192.168.1.190", port: 9100, true);
-            var e = new EPSON();
-            printer.Write(
-              ByteSplicer.Combine(
-                e.CenterAlign(),
-                e.PrintLine("TICKET APERTURA DE CAJA"),
-                e.PrintLine(Line),
-                e.LeftAlign(),
-                e.PrintLine("Terminal:              RAIXES"),
-                e.PrintLine("Usuario:               TOOTLE"),
-                e.PrintLine("Fecha:                 23/07/2021"),
-                e.PrintLine("Hora:                  12:14 p.m."),
-                e.CenterAlign(),
-                e.PrintLine(Line),
-                e.LeftAlign(),
-                e.PrintLine("Billetes 500:          4"),
-                e.PrintLine("Billetes 200:          1"),
-                e.PrintLine("Billetes 100:          1"),
-                e.PrintLine("Billetes 50:           1"),
-                e.PrintLine("Billetes 20:           2"),
-                e.PrintLine("Monedas:               2"),
-                e.PrintLine("Total:                 $2,391.00"),
-                e.CenterAlign(),
-                e.PrintLine(Line),
-                e.LeftAlign(),
-                e.PrintLine("Comentario:            APERTURA"),
-                e.PrintLine(""),
-                e.CenterAlign(),
-                e.PrintLine("Firma:"),
-                e.PrintLine(""),
-                e.PrintLine(""),
-                e.PrintLine("_________________________"),
-                e.FullCutAfterFeed(4)
-                )
-            );
-        }
         public static void Apertura(Printer printer, POSRegister register)
         {
             Registro(printer, "TICKET APERTURA DE CAJA", register);
@@ -63,74 +26,326 @@ namespace POSLitePrinterAPI
         }
         public static void Preparacion(Printer physical_printer, POSEnc orden)
         {
-            var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
-            var e = new EPSON();
-            
-            printer.Write(
-              ByteSplicer.Combine(
-                GetEncabezado(e, orden),
-                e.PrintLine(Line),
-                e.SetStyles(PrintStyle.Bold),
-                e.PrintLine("TICKET DE ORDEN"),
-                e.SetStyles(PrintStyle.None),
-                e.PrintLine(Line),
-                e.LeftAlign(),
-                e.PrintLine("No. Ticket:            " + orden.IntOrden),
-                GetServicio(e, orden),
-                e.PrintLine("Caja:                  " + orden.StrTerminal),
-                e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
-                e.CenterAlign(),
-                e.PrintLine(Line),
-                e.LeftAlign(),
-                e.PrintLine("#           PRECIO             TOTAL"),
-                GetDetalles(e, orden.POSDet),
-                e.CenterAlign(),
-                e.PrintLine(Line),
-                e.LeftAlign(),
-                e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
-                e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
-                e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
-                e.PrintLine(""),
-                e.CenterAlign(),
-                e.PrintLine("Gracias por su preferencia!"),
-                e.FullCutAfterFeed(4)
-                )
-            );
+            //Aqui modificamos el codigo para separar las tres opciones de impresora
+            var printer_name = physical_printer.address.Split(":");
 
-            printer.Dispose();
+            if (printer_name.Length == 1)
+            {
+                //Por valor predeterminado es NETWORK
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+
+                printer.Write(
+                  ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET DE ORDEN"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
+                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "NETWORK")
+            {
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET DE ORDEN"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
+                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "USB")
+            {
+                var printer = new SerialPrinter(printer_name[1], physical_printer.port);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET DE ORDEN"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
+                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "FILE")
+            {
+                var printer = new FilePrinter(printer_name[1]);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET DE ORDEN"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
+                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+
         }
         public static void Cocina(Printer physical_printer, POSEnc orden)
         {
-            var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
-            var e = new EPSON();
+            //Aqui modificamos el codigo para separar las tres opciones de impresora
+            var printer_name = physical_printer.address.Split(":");
 
-            printer.Write(
-              ByteSplicer.Combine(
-                e.CenterAlign(),
-                                e.PrintLine(Line),
-                e.SetStyles(PrintStyle.Bold),
-                e.PrintLine("TICKET DE COCINA"),
-                e.SetStyles(PrintStyle.None),
-                e.PrintLine(Line),
-                e.LeftAlign(),
-                e.PrintLine("No. Ticket:            " + orden.IntOrden),
-                GetServicio(e, orden),
-                e.PrintLine("Caja:                  " + orden.StrTerminal),
-                e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
-                GetDetallesConfiguracion(e, orden.POSDet),
-                e.FullCutAfterFeed(4)
-                )
-            );
+            if (printer_name.Length == 1)
+            {
+                //Por valor predeterminado es NETWORK
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
 
-            printer.Dispose();
+                printer.Write(
+                   ByteSplicer.Combine(
+                     e.CenterAlign(),
+                     e.PrintLine(Line),
+                     e.SetStyles(PrintStyle.Bold),
+                     e.PrintLine("TICKET DE COCINA"),
+                     e.SetStyles(PrintStyle.None),
+                     e.PrintLine(Line),
+                     e.LeftAlign(),
+                     e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                     GetServicio(e, orden),
+                     e.PrintLine("Caja:                  " + orden.StrTerminal),
+                     e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                     GetDetallesConfiguracion(e, orden.POSDet),
+                     e.FullCutAfterFeed(4)
+                     )
+                 );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "NETWORK")
+            {
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+                printer.Write(
+                    ByteSplicer.Combine(
+                      e.CenterAlign(),
+                      e.PrintLine(Line),
+                      e.SetStyles(PrintStyle.Bold),
+                      e.PrintLine("TICKET DE COCINA"),
+                      e.SetStyles(PrintStyle.None),
+                      e.PrintLine(Line),
+                      e.LeftAlign(),
+                      e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                      GetServicio(e, orden),
+                      e.PrintLine("Caja:                  " + orden.StrTerminal),
+                      e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                      GetDetallesConfiguracion(e, orden.POSDet),
+                      e.FullCutAfterFeed(4)
+                      )
+                  );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "USB")
+            {
+                var printer = new SerialPrinter(printer_name[1], physical_printer.port);
+                var e = new EPSON();
+                printer.Write(
+                    ByteSplicer.Combine(
+                      e.CenterAlign(),
+                      e.PrintLine(Line),
+                      e.SetStyles(PrintStyle.Bold),
+                      e.PrintLine("TICKET DE COCINA"),
+                      e.SetStyles(PrintStyle.None),
+                      e.PrintLine(Line),
+                      e.LeftAlign(),
+                      e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                      GetServicio(e, orden),
+                      e.PrintLine("Caja:                  " + orden.StrTerminal),
+                      e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                      GetDetallesConfiguracion(e, orden.POSDet),
+                      e.FullCutAfterFeed(4)
+                      )
+                  );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "FILE")
+            {
+                var printer = new FilePrinter(printer_name[1]);
+                var e = new EPSON();
+                printer.Write(
+                   ByteSplicer.Combine(
+                     e.CenterAlign(),
+                     e.PrintLine(Line),
+                     e.SetStyles(PrintStyle.Bold),
+                     e.PrintLine("TICKET DE COCINA"),
+                     e.SetStyles(PrintStyle.None),
+                     e.PrintLine(Line),
+                     e.LeftAlign(),
+                     e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                     GetServicio(e, orden),
+                     e.PrintLine("Caja:                  " + orden.StrTerminal),
+                     e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                     GetDetallesConfiguracion(e, orden.POSDet),
+                     e.FullCutAfterFeed(4)
+                     )
+                 );
+
+                printer.Dispose();
+            }
+
         }
         public static void Pago(Printer physical_printer, POSEnc orden)
         {
-            var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
-            var e = new EPSON();
+            //Aqui modificamos el codigo para separar las tres opciones de impresora
+            var printer_name = physical_printer.address.Split(":");
 
-            printer.Write(
+            if (printer_name.Length == 1)
+            {
+                //Por valor predeterminado es NETWORK
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+
+                printer.Write(
+                ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET DE PAGO"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
+                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.PrintLine("Pagos"),
+                    e.PrintLine(Line),
+                    GetPagos(e, orden.POSEncPago, orden.DblTotal),
+                    e.PrintLine(""),
+                    e.PrintLine(Line),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    e.FullCutAfterFeed(4)
+                )
+            );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "NETWORK")
+            {
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+                printer.Write(
               ByteSplicer.Combine(
                 GetEncabezado(e, orden),
                 e.PrintLine(Line),
@@ -168,50 +383,275 @@ namespace POSLitePrinterAPI
                 )
             );
 
-            printer.Dispose();
-        }
-        private static void Registro(Printer physical_printer, String strTitulo, POSRegister register)
-        {
-            var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
-            var e = new EPSON();
-            printer.Write(
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "USB")
+            {
+                var printer = new SerialPrinter(printer_name[1], physical_printer.port);
+                var e = new EPSON();
+                printer.Write(
               ByteSplicer.Combine(
-                e.CenterAlign(),
+                GetEncabezado(e, orden),
                 e.PrintLine(Line),
                 e.SetStyles(PrintStyle.Bold),
-                e.PrintLine(strTitulo),
+                e.PrintLine("TICKET DE PAGO"),
                 e.SetStyles(PrintStyle.None),
                 e.PrintLine(Line),
                 e.LeftAlign(),
-                e.PrintLine("Terminal:              " + register.StrTerminal),
-                e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
-                e.PrintLine("Fecha:                 " + register.DatFechaImpresion.ToShortDateString()),
-                e.PrintLine("Hora:                  " + register.DatFechaImpresion.ToShortTimeString()),
+                e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                GetServicio(e, orden),
+                e.PrintLine("Caja:                  " + orden.StrTerminal),
+                e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
                 e.CenterAlign(),
                 e.PrintLine(Line),
                 e.LeftAlign(),
-                e.PrintLine("Billetes 500:          " + register.DblDenominacion500),
-                e.PrintLine("Billetes 200:          " + register.DblDenominacion200),
-                e.PrintLine("Billetes 100:          " + register.DblDenominacion100),
-                e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
-                e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
-                e.PrintLine("Monedas:               " + register.DblMonedas),
-                e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                e.PrintLine("#           PRECIO             TOTAL"),
+                GetDetalles(e, orden.POSDet),
                 e.CenterAlign(),
                 e.PrintLine(Line),
                 e.LeftAlign(),
-                e.PrintLine("Comentario:            " + register.StrComentario),
+                e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
+                e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
+                e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
                 e.PrintLine(""),
                 e.CenterAlign(),
-                e.PrintLine("Firma:"),
+                e.PrintLine(Line),
+                e.PrintLine("Pagos"),
+                e.PrintLine(Line),
+                GetPagos(e, orden.POSEncPago, orden.DblTotal),
                 e.PrintLine(""),
-                e.PrintLine(""),
-                e.PrintLine("_________________________"),
+                e.PrintLine(Line),
+                e.PrintLine("Gracias por su preferencia!"),
                 e.FullCutAfterFeed(4)
                 )
             );
 
-            printer.Dispose();
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "FILE")
+            {
+                var printer = new FilePrinter(printer_name[1]);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET DE PAGO"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
+                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.PrintLine("Pagos"),
+                    e.PrintLine(Line),
+                    GetPagos(e, orden.POSEncPago, orden.DblTotal),
+                    e.PrintLine(""),
+                    e.PrintLine(Line),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+        }
+        private static void Registro(Printer physical_printer, String strTitulo, POSRegister register)
+        {
+            //Aqui modificamos el codigo para separar las tres opciones de impresora
+            var printer_name = physical_printer.address.Split(":");
+
+            if (printer_name.Length == 1)
+            {
+                //Por valor predeterminado es NETWORK
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine(strTitulo),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Terminal:              " + register.StrTerminal),
+                    e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
+                    e.PrintLine("Fecha:                 " + register.DatFechaImpresion.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Billetes 500:          " + register.DblDenominacion500),
+                    e.PrintLine("Billetes 200:          " + register.DblDenominacion200),
+                    e.PrintLine("Billetes 100:          " + register.DblDenominacion100),
+                    e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
+                    e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
+                    e.PrintLine("Monedas:               " + register.DblMonedas),
+                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Comentario:            " + register.StrComentario),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine("Firma:"),
+                    e.PrintLine(""),
+                    e.PrintLine(""),
+                    e.PrintLine("_________________________"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "NETWORK")
+            {
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine(strTitulo),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Terminal:              " + register.StrTerminal),
+                    e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
+                    e.PrintLine("Fecha:                 " + register.DatFechaImpresion.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Billetes 500:          " + register.DblDenominacion500),
+                    e.PrintLine("Billetes 200:          " + register.DblDenominacion200),
+                    e.PrintLine("Billetes 100:          " + register.DblDenominacion100),
+                    e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
+                    e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
+                    e.PrintLine("Monedas:               " + register.DblMonedas),
+                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Comentario:            " + register.StrComentario),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine("Firma:"),
+                    e.PrintLine(""),
+                    e.PrintLine(""),
+                    e.PrintLine("_________________________"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "USB")
+            {
+                var printer = new SerialPrinter(printer_name[1], physical_printer.port);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine(strTitulo),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Terminal:              " + register.StrTerminal),
+                    e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
+                    e.PrintLine("Fecha:                 " + register.DatFechaImpresion.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Billetes 500:          " + register.DblDenominacion500),
+                    e.PrintLine("Billetes 200:          " + register.DblDenominacion200),
+                    e.PrintLine("Billetes 100:          " + register.DblDenominacion100),
+                    e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
+                    e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
+                    e.PrintLine("Monedas:               " + register.DblMonedas),
+                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Comentario:            " + register.StrComentario),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine("Firma:"),
+                    e.PrintLine(""),
+                    e.PrintLine(""),
+                    e.PrintLine("_________________________"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "FILE")
+            {
+                var printer = new FilePrinter(printer_name[1]);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine(strTitulo),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Terminal:              " + register.StrTerminal),
+                    e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
+                    e.PrintLine("Fecha:                 " + register.DatFechaImpresion.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFechaImpresion.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Billetes 500:          " + register.DblDenominacion500),
+                    e.PrintLine("Billetes 200:          " + register.DblDenominacion200),
+                    e.PrintLine("Billetes 100:          " + register.DblDenominacion100),
+                    e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
+                    e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
+                    e.PrintLine("Monedas:               " + register.DblMonedas),
+                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Comentario:            " + register.StrComentario),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    e.PrintLine("Firma:"),
+                    e.PrintLine(""),
+                    e.PrintLine(""),
+                    e.PrintLine("_________________________"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
         }
         private static byte[] GetPagos(EPSON e, List<POSEncPago> pagos, Double apagar)
         {
