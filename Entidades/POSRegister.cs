@@ -25,12 +25,12 @@ namespace Entidades
         private System.Double _dblDenominacion1000;
         private System.Double _dblMonedas;
         private System.Double _dblOtrosPagos;
-        private System.Int32 _intEmpleado;
+        private int? _intEmpleado;
         private System.String _datHora;
-        private System.Int32 _intIntentos;
-        private System.Int32 _intCorteGlobal;
+        private int? _intIntentos;
+        private int? _intCorteGlobal;
         private System.String _strTerminal;
-        private System.String _datFecha;
+        private System.DateTime? _datFecha;
         private Entidades.Printer _POSPrinter;
 
         #endregion
@@ -62,7 +62,7 @@ namespace Entidades
             get { return _strTerminal; }
             set { _strTerminal = value; }
         }
-        public System.String DatFecha
+        public System.DateTime? DatFecha
         {
             get { return _datFecha; }
             set { _datFecha = value; }
@@ -193,7 +193,7 @@ namespace Entidades
             set { _dblOtrosPagos = value; }
         }
 
-        public System.Int32 IntEmpleado
+        public int? IntEmpleado
         {
             get { return _intEmpleado; }
             set { _intEmpleado = value; }
@@ -205,18 +205,21 @@ namespace Entidades
             set { _datHora = value; }
         }
 
-        public System.Int32 IntIntentos
+        public int? IntIntentos
         {
             get { return _intIntentos; }
             set { _intIntentos = value; }
         }
 
-        public System.Int32 IntCorteGlobal
+        public int? IntCorteGlobal
         {
             get { return _intCorteGlobal; }
             set { _intCorteGlobal = value; }
         }
 
+        public String StrMaquinaAlta { get; set; }
+
+        public DateTime DatFechaAlta { get; set; }
 
         #endregion
 

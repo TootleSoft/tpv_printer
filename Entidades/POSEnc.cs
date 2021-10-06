@@ -10,52 +10,52 @@ namespace Entidades
     {
 
         #region Private Variables
-        private System.Int32 _intPOSEnc;
-        private System.Int32 _intPOSRegister;
-        private System.Int32 _intFolio;
-        private System.String _datFecha;
-        private System.Int32 _intCliente;
-        private System.Int32 _intEmpleado;
+        private int? _intPOSEnc;
+        private int? _intPOSRegister;
+        private int? _intFolio;
+        private System.DateTime? _datFecha;
+        private int? _intCliente;
+        private int? _intEmpleado;
         private System.Double _dblSubtotal;
         private System.Double _dblIVA;
         private System.Double _dblIEPS;
         private System.Double _dblTotal;
         private System.Double _dblPorcentajeDescuento;
-        private System.Int32 _intGrupo;
+        private int? _intGrupo;
         private System.String _strNota;
         private System.String _strUsuarioPOS;
-        private System.Int32 _intEstatus;
-        private System.Int32 _intPOSEncSincronizado;
-        private System.Int32 _intSincronizado;
+        private int? _intEstatus;
+        private int? _intPOSEncSincronizado;
+        private int? _intSincronizado;
         private System.String _strTipoServicio;
         private System.String _datHora;
         private System.String _strMesero;
         private System.String _strRepartidor;
-        private System.Int32 _intPOSTipoServicio;
-        private System.Int32 _intDomicilioEmpleado;
+        private int? _intPOSTipoServicio;
+        private int? _intDomicilioEmpleado;
         private System.String _datDomicilioFechaSale;
         private System.Double _dblDomicilioPagaCon;
         private System.Double _dblPropina;
         private System.String _strMesa;
-        private System.Int32 _intOrden;
+        private int? _intOrden;
         private System.String _strUsuarioCancelacion;
         private System.String _datFechaCancelacion;
-        private System.Int32 _intPOSMotivoCancelacion;
+        private int? _intPOSMotivoCancelacion;
         private System.String _strComentarioCancelacion;
         private System.String _datFechaPrepara;
-        private System.Int32 _intCancelacionDevolucion;
+        private int? _intCancelacionDevolucion;
         private System.String _datFechaFin;
         private System.String _strCantidadLetra;
         private System.Double _dblTotalPagado;
         private System.Double _dblCambio;
-        private System.Int32 _intPOSDescuento;
+        private int? _intPOSDescuento;
         private System.String _datFechaDescuento;
         private System.String _strUsuarioDescuento;
         private System.String _strClaveDescuento;
-        private System.Int32 _intPOSMotivoDescuento;
+        private int? _intPOSMotivoDescuento;
         private System.String _strReferenciaDescuento;
-        private System.Int32 _intPOSRegisterOriginal;
-        private System.Int32 _intTipoDescuento;
+        private int? _intPOSRegisterOriginal;
+        private int? _intTipoDescuento;
         private System.String _uidGuid;
         private System.String _strNombre;
         private System.String _strTelefono;
@@ -65,20 +65,21 @@ namespace Entidades
         private System.String _strReferencia;
         private System.String _strTelefono2;
         private System.String _strEntreCalle;
-        private System.Int32 _intRequiereFactura;
+        private int? _intRequiereFactura;
         private System.Double _dblEnvio1;
         private System.Double _dblEnvio2;
         private System.Double _dblEnvio3;
         private System.Double _dblEnvio4;
         private System.Double _dblEnvio5;
-        private System.Int32 _intPedidoQP;
-        private System.Int32 _intFolioEmpleado;
+        private int? _intPedidoQP;
+        private int? _intFolioEmpleado;
         private System.String _strCardId;
         private System.String _strUId;
-        private System.Int32? _intPOSCobraComanda;
+        private int? _intPOSCobraComanda;
         private System.String _strBiometrico;
-        private System.Int32 _intPOSMesero;
-        private System.Int32 _intPOSTipoVenta;
+        private int? _intPOSMesero;
+        private int? _intPOSTipoVenta;
+        private Double _dblImporteDescuento;
         private List<POSDet> _POSDet;
         private List<POSEncPago> _POSEncPago;
 
@@ -89,6 +90,14 @@ namespace Entidades
             get { return _bolReimpresion; }
             set { _bolReimpresion = value; }
         }
+
+        public Double DblImporteDescuento
+        {
+            get { return _dblImporteDescuento; }
+            set { _dblImporteDescuento = value; }
+        }
+
+
 
 
         private DateTime _datFechaImpresion;
@@ -137,42 +146,42 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntPOSEnc
+        public int? IntPOSEnc
         {
             get { return _intPOSEnc; }
             set { _intPOSEnc = value; }
         }
 
 
-        public System.Int32 IntPOSRegister
+        public int? IntPOSRegister
         {
             get { return _intPOSRegister; }
             set { _intPOSRegister = value; }
         }
 
 
-        public System.Int32 IntFolio
+        public int? IntFolio
         {
             get { return _intFolio; }
             set { _intFolio = value; }
         }
 
 
-        public System.String DatFecha
+        public System.DateTime? DatFecha
         {
             get { return _datFecha; }
             set { _datFecha = value; }
         }
 
 
-        public System.Int32 IntCliente
+        public int? IntCliente
         {
             get { return _intCliente; }
             set { _intCliente = value; }
         }
 
 
-        public System.Int32 IntEmpleado
+        public int? IntEmpleado
         {
             get { return _intEmpleado; }
             set { _intEmpleado = value; }
@@ -214,7 +223,7 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntGrupo
+        public int? IntGrupo
         {
             get { return _intGrupo; }
             set { _intGrupo = value; }
@@ -235,21 +244,21 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntEstatus
+        public int? IntEstatus
         {
             get { return _intEstatus; }
             set { _intEstatus = value; }
         }
 
 
-        public System.Int32 IntPOSEncSincronizado
+        public int? IntPOSEncSincronizado
         {
             get { return _intPOSEncSincronizado; }
             set { _intPOSEncSincronizado = value; }
         }
 
 
-        public System.Int32 IntSincronizado
+        public int? IntSincronizado
         {
             get { return _intSincronizado; }
             set { _intSincronizado = value; }
@@ -282,14 +291,14 @@ namespace Entidades
             set { _strRepartidor = value; }
         }
 
-        public System.Int32 IntPOSTipoServicio
+        public int? IntPOSTipoServicio
         {
             get { return _intPOSTipoServicio; }
             set { _intPOSTipoServicio = value; }
         }
 
 
-        public System.Int32 IntDomicilioEmpleado
+        public int? IntDomicilioEmpleado
         {
             get { return _intDomicilioEmpleado; }
             set { _intDomicilioEmpleado = value; }
@@ -324,7 +333,7 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntOrden
+        public int? IntOrden
         {
             get { return _intOrden; }
             set { _intOrden = value; }
@@ -345,7 +354,7 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntPOSMotivoCancelacion
+        public int? IntPOSMotivoCancelacion
         {
             get { return _intPOSMotivoCancelacion; }
             set { _intPOSMotivoCancelacion = value; }
@@ -366,7 +375,7 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntCancelacionDevolucion
+        public int? IntCancelacionDevolucion
         {
             get { return _intCancelacionDevolucion; }
             set { _intCancelacionDevolucion = value; }
@@ -401,7 +410,7 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntPOSDescuento
+        public int? IntPOSDescuento
         {
             get { return _intPOSDescuento; }
             set { _intPOSDescuento = value; }
@@ -429,7 +438,7 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntPOSMotivoDescuento
+        public int? IntPOSMotivoDescuento
         {
             get { return _intPOSMotivoDescuento; }
             set { _intPOSMotivoDescuento = value; }
@@ -443,14 +452,14 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntPOSRegisterOriginal
+        public int? IntPOSRegisterOriginal
         {
             get { return _intPOSRegisterOriginal; }
             set { _intPOSRegisterOriginal = value; }
         }
 
 
-        public System.Int32 IntTipoDescuento
+        public int? IntTipoDescuento
         {
             get { return _intTipoDescuento; }
             set { _intTipoDescuento = value; }
@@ -516,7 +525,7 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntRequiereFactura
+        public int? IntRequiereFactura
         {
             get { return _intRequiereFactura; }
             set { _intRequiereFactura = value; }
@@ -552,13 +561,13 @@ namespace Entidades
             set { _dblEnvio5 = value; }
         }
 
-        public System.Int32 IntPedidoQP
+        public int? IntPedidoQP
         {
             get { return _intPedidoQP; }
             set { _intPedidoQP = value; }
         }
 
-        public System.Int32 IntFolioEmpleado
+        public int? IntFolioEmpleado
         {
             get { return _intFolioEmpleado; }
             set { _intFolioEmpleado = value; }
@@ -576,7 +585,7 @@ namespace Entidades
             set { _strUId = value; }
         }
 
-        public System.Int32? IntPOSCobraComanda
+        public int? IntPOSCobraComanda
         {
             get { return _intPOSCobraComanda; }
             set { _intPOSCobraComanda = value; }
@@ -603,13 +612,13 @@ namespace Entidades
             set { _POSEncPago = value; }
         }
 
-        public System.Int32 IntPOSMesero
+        public int? IntPOSMesero
         {
             get { return _intPOSMesero; }
             set { _intPOSMesero = value; }
         }
 
-        public System.Int32 IntPOSTipoVenta
+        public int? IntPOSTipoVenta
         {
             get { return _intPOSTipoVenta; }
             set { _intPOSTipoVenta = value; }

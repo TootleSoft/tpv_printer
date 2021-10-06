@@ -43,7 +43,6 @@ namespace Entidades
         private System.Int32 _intTipoDescuento;
         private System.Int32 _intOrdenImpresion;
         private System.Int32 _intCancelacionDevolucion;
-        private System.Int32 _intPOSRegister;
         private System.Int32 _intPOSImpresora;
         private List<POSDetArticuloConfiguracion> _POSDetArticuloConfiguracion;
 
@@ -280,13 +279,6 @@ namespace Entidades
             get { return _intCancelacionDevolucion; }
             set { _intCancelacionDevolucion = value; }
         }
-
-        public System.Int32 IntPOSRegister
-        {
-            get { return _intPOSRegister; }
-            set { _intPOSRegister = value; }
-        }
-
         public System.Int32 IntPOSImpresora
         {
             get { return _intPOSImpresora; }

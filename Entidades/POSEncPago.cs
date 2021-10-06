@@ -10,57 +10,57 @@ namespace Entidades
     {
 
         #region Private Variables
-        private System.Int32 _intPOSEncPago;
-        private System.Int32 _intFolio;
-        private System.Int32 _intPOSEnc;
-        private System.Int32 _intNumeroCuenta;
-        private System.Int32 _intTipoPago;
+        private int? _intPOSEncPago;
+        private int? _intFolio;
+        private int? _intPOSEnc;
+        private int? _intNumeroCuenta;
+        private int? _intTipoPago;
         private System.String _strNombre;
         private System.Double _dblImporte;
         private System.String _strReferencia;
         private System.Double _dblCambio;
-        private System.Int32 _intGrupo;
-        private System.Int32 _intEstatus;
+        private int? _intGrupo;
+        private int? _intEstatus;
         private System.String _uidGuid;
-        private System.Int32 _intPOSRequiereFirma;
+        private int? _intPOSRequiereFirma;
         private System.String _strUsuario;
         private System.String _strContrasenia;
         private System.String _strBiometrico;
         private System.String _strEmpleadoBiometrico;
-        private System.Int32 _intEmpleadoBiometrico;
+        private int? _intEmpleadoBiometrico;
         #endregion
 
 
         #region Public Properties
-        public System.Int32 IntPOSEncPago
+        public int? IntPOSEncPago
         {
             get { return _intPOSEncPago; }
             set { _intPOSEncPago = value; }
         }
 
 
-        public System.Int32 IntFolio
+        public int? IntFolio
         {
             get { return _intFolio; }
             set { _intFolio = value; }
         }
 
 
-        public System.Int32 IntPOSEnc
+        public int? IntPOSEnc
         {
             get { return _intPOSEnc; }
             set { _intPOSEnc = value; }
         }
 
 
-        public System.Int32 IntNumeroCuenta
+        public int? IntNumeroCuenta
         {
             get { return _intNumeroCuenta; }
             set { _intNumeroCuenta = value; }
         }
 
 
-        public System.Int32 IntTipoPago
+        public int? IntTipoPago
         {
             get { return _intTipoPago; }
             set { _intTipoPago = value; }
@@ -95,7 +95,7 @@ namespace Entidades
         }
 
 
-        public System.Int32 IntGrupo
+        public int? IntGrupo
         {
             get { return _intGrupo; }
             set { _intGrupo = value; }
@@ -108,13 +108,13 @@ namespace Entidades
             set { _uidGuid = value; }
         }
 
-        public System.Int32 IntEstatus
+        public int? IntEstatus
         {
             get { return _intEstatus; }
             set { _intEstatus = value; }
         }
 
-        public System.Int32 IntPOSRequiereFirma
+        public int? IntPOSRequiereFirma
         {
             get { return _intPOSRequiereFirma; }
             set { _intPOSRequiereFirma = value; }
@@ -139,7 +139,7 @@ namespace Entidades
             set { _strBiometrico = value; }
         }
 
-        public System.Int32 IntEmpleadoBiometrico
+        public int? IntEmpleadoBiometrico
         {
             get { return _intEmpleadoBiometrico; }
             set { _intEmpleadoBiometrico = value; }

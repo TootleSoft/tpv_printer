@@ -47,7 +47,7 @@ namespace POSLitePrinterAPI
                     e.PrintLine("No. Ticket:            " + orden.IntOrden),
                     GetServicio(e, orden),
                     e.PrintLine("Caja:                  " + orden.StrTerminal),
-                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -85,7 +85,7 @@ namespace POSLitePrinterAPI
                     e.PrintLine("No. Ticket:            " + orden.IntOrden),
                     GetServicio(e, orden),
                     e.PrintLine("Caja:                  " + orden.StrTerminal),
-                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -123,7 +123,7 @@ namespace POSLitePrinterAPI
                     e.PrintLine("No. Ticket:            " + orden.IntOrden),
                     GetServicio(e, orden),
                     e.PrintLine("Caja:                  " + orden.StrTerminal),
-                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -161,7 +161,7 @@ namespace POSLitePrinterAPI
                     e.PrintLine("No. Ticket:            " + orden.IntOrden),
                     GetServicio(e, orden),
                     e.PrintLine("Caja:                  " + orden.StrTerminal),
-                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -208,7 +208,7 @@ namespace POSLitePrinterAPI
                      e.PrintLine("No. Ticket:            " + orden.IntOrden),
                      GetServicio(e, orden),
                      e.PrintLine("Caja:                  " + orden.StrTerminal),
-                     e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                     e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                      GetDetallesConfiguracion(e, orden.POSDet),
                      e.FullCutAfterFeed(4)
                      )
@@ -232,7 +232,7 @@ namespace POSLitePrinterAPI
                       e.PrintLine("No. Ticket:            " + orden.IntOrden),
                       GetServicio(e, orden),
                       e.PrintLine("Caja:                  " + orden.StrTerminal),
-                      e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                      e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                       GetDetallesConfiguracion(e, orden.POSDet),
                       e.FullCutAfterFeed(4)
                       )
@@ -256,7 +256,7 @@ namespace POSLitePrinterAPI
                       e.PrintLine("No. Ticket:            " + orden.IntOrden),
                       GetServicio(e, orden),
                       e.PrintLine("Caja:                  " + orden.StrTerminal),
-                      e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                      e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                       GetDetallesConfiguracion(e, orden.POSDet),
                       e.FullCutAfterFeed(4)
                       )
@@ -280,7 +280,7 @@ namespace POSLitePrinterAPI
                      e.PrintLine("No. Ticket:            " + orden.IntOrden),
                      GetServicio(e, orden),
                      e.PrintLine("Caja:                  " + orden.StrTerminal),
-                     e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                     e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                      GetDetallesConfiguracion(e, orden.POSDet),
                      e.FullCutAfterFeed(4)
                      )
@@ -313,7 +313,7 @@ namespace POSLitePrinterAPI
                     e.PrintLine("No. Ticket:            " + orden.IntOrden),
                     GetServicio(e, orden),
                     e.PrintLine("Caja:                  " + orden.StrTerminal),
-                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -324,7 +324,7 @@ namespace POSLitePrinterAPI
                     e.LeftAlign(),
                     e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
                     e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
                     e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
                     e.PrintLine(""),
                     e.CenterAlign(),
@@ -357,7 +357,7 @@ namespace POSLitePrinterAPI
                 e.PrintLine("No. Ticket:            " + orden.IntOrden),
                 GetServicio(e, orden),
                 e.PrintLine("Caja:                  " + orden.StrTerminal),
-                e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                 e.CenterAlign(),
                 e.PrintLine(Line),
                 e.LeftAlign(),
@@ -401,7 +401,7 @@ namespace POSLitePrinterAPI
                 e.PrintLine("No. Ticket:            " + orden.IntOrden),
                 GetServicio(e, orden),
                 e.PrintLine("Caja:                  " + orden.StrTerminal),
-                e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                 e.CenterAlign(),
                 e.PrintLine(Line),
                 e.LeftAlign(),
@@ -445,7 +445,7 @@ namespace POSLitePrinterAPI
                     e.PrintLine("No. Ticket:            " + orden.IntOrden),
                     GetServicio(e, orden),
                     e.PrintLine("Caja:                  " + orden.StrTerminal),
-                    e.PrintLine("Fecha:                 " + orden.DatFechaImpresion.ToShortDateString() + " " + orden.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -484,7 +484,10 @@ namespace POSLitePrinterAPI
                 //Por valor predeterminado es NETWORK
                 var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
                 var e = new EPSON();
-                printer.Write(
+
+                if (strTitulo == "TICKET CIERRE DE CAJA")
+                {
+                    printer.Write(
                   ByteSplicer.Combine(
                     e.CenterAlign(),
                     e.PrintLine(Line),
@@ -493,10 +496,10 @@ namespace POSLitePrinterAPI
                     e.SetStyles(PrintStyle.None),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Terminal:              " + register.StrTerminal),
+                    e.PrintLine("Terminal:              " + register.StrMaquinaAlta),
                     e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
-                    e.PrintLine("Fecha:                 " + register.DatFechaImpresion.ToShortDateString()),
-                    e.PrintLine("Hora:                  " + register.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + register.DatFechaAlta.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFechaAlta.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -520,6 +523,49 @@ namespace POSLitePrinterAPI
                     e.FullCutAfterFeed(4)
                     )
                 );
+                }
+                else
+                {
+                    printer.Write(
+                 ByteSplicer.Combine(
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.SetStyles(PrintStyle.Bold),
+                   e.PrintLine(strTitulo),
+                   e.SetStyles(PrintStyle.None),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Terminal:              " + register.StrMaquinaAlta),
+                   e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
+                   e.PrintLine("Fecha:                 " + register.DatFechaAlta.ToShortDateString()),
+                   e.PrintLine("Hora:                  " + register.DatFechaAlta.ToShortTimeString()),
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Billetes 500:          " + register.DblDenominacion500),
+                   e.PrintLine("Billetes 200:          " + register.DblDenominacion200),
+                   e.PrintLine("Billetes 100:          " + register.DblDenominacion100),
+                   e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
+                   e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
+                   e.PrintLine("Monedas:               " + register.DblMonedas),
+                   e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
+                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Comentario:            " + register.StrComentario),
+                   e.PrintLine(""),
+                   e.CenterAlign(),
+                   e.PrintLine("Firma:"),
+                   e.PrintLine(""),
+                   e.PrintLine(""),
+                   e.PrintLine("_________________________"),
+                   e.FullCutAfterFeed(4)
+                   )
+               );
+                }
+
+               
 
                 printer.Dispose();
             }
@@ -538,8 +584,8 @@ namespace POSLitePrinterAPI
                     e.LeftAlign(),
                     e.PrintLine("Terminal:              " + register.StrTerminal),
                     e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
-                    e.PrintLine("Fecha:                 " + register.DatFechaImpresion.ToShortDateString()),
-                    e.PrintLine("Hora:                  " + register.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + register.DatFecha.Value.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFecha.Value.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -581,8 +627,8 @@ namespace POSLitePrinterAPI
                     e.LeftAlign(),
                     e.PrintLine("Terminal:              " + register.StrTerminal),
                     e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
-                    e.PrintLine("Fecha:                 " + register.DatFechaImpresion.ToShortDateString()),
-                    e.PrintLine("Hora:                  " + register.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + register.DatFecha.Value.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFecha.Value.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -624,8 +670,8 @@ namespace POSLitePrinterAPI
                     e.LeftAlign(),
                     e.PrintLine("Terminal:              " + register.StrTerminal),
                     e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
-                    e.PrintLine("Fecha:                 " + register.DatFechaImpresion.ToShortDateString()),
-                    e.PrintLine("Hora:                  " + register.DatFechaImpresion.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + register.DatFecha.Value.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFecha.Value.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
