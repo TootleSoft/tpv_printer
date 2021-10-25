@@ -1,7 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Entidades
 {
+    public class Pagos {
+        public string nombre { get; set; }
+        public double? importe { get; set; }
+    }
+
     public class POSRegister
     {
         #region Private Variables
@@ -32,8 +38,17 @@ namespace Entidades
         private System.String _strTerminal;
         private System.DateTime? _datFecha;
         private Entidades.Printer _POSPrinter;
+        public List<Pagos> pagos { get; set; }
 
         #endregion
+        private double? _dblVentas;
+
+        public double? DblVentas
+        {
+            get { return _dblVentas; }
+            set { _dblVentas = value; }
+        }
+
 
         private DateTime _datFechaImpresion;
 

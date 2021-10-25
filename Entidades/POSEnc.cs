@@ -8,7 +8,9 @@ namespace Entidades
 {
     public class POSEnc
     {
-
+        public List<object> ticket { get; set; }
+        public string strHabitacion { get; set; }
+        public string strApellidoReferencia { get; set; }
         #region Private Variables
         private int? _intPOSEnc;
         private int? _intPOSRegister;

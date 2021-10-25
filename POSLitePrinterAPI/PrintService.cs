@@ -6,6 +6,7 @@ using ESCPOS_NET;
 using ESCPOS_NET.Emitters;
 using ESCPOS_NET.Utilities;
 using Entidades;
+using System.Text.Json;
 
 namespace POSLitePrinterAPI
 {
@@ -58,11 +59,13 @@ namespace POSLitePrinterAPI
                     e.LeftAlign(),
                     e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
                     e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
                     e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
                     e.PrintLine(""),
                     e.CenterAlign(),
+                    GetPolitica(e, orden.ticket, "visible_preparacion"),
                     e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_preparacion"),
                     e.FullCutAfterFeed(4)
                     )
                 );
@@ -96,11 +99,13 @@ namespace POSLitePrinterAPI
                     e.LeftAlign(),
                     e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
                     e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
                     e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
                     e.PrintLine(""),
                     e.CenterAlign(),
+                    GetPolitica(e, orden.ticket, "visible_preparacion"),
                     e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_preparacion"),
                     e.FullCutAfterFeed(4)
                     )
                 );
@@ -134,11 +139,13 @@ namespace POSLitePrinterAPI
                     e.LeftAlign(),
                     e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
                     e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
                     e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
                     e.PrintLine(""),
                     e.CenterAlign(),
+                    GetPolitica(e, orden.ticket, "visible_preparacion"),
                     e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_preparacion"),
                     e.FullCutAfterFeed(4)
                     )
                 );
@@ -172,11 +179,13 @@ namespace POSLitePrinterAPI
                     e.LeftAlign(),
                     e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
                     e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
                     e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
                     e.PrintLine(""),
                     e.CenterAlign(),
+                    GetPolitica(e, orden.ticket, "visible_preparacion"),
                     e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_preparacion"),
                     e.FullCutAfterFeed(4)
                     )
                 );
@@ -185,6 +194,9 @@ namespace POSLitePrinterAPI
             }
 
         }
+
+   
+
         public static void Cocina(Printer physical_printer, POSEnc orden)
         {
             //Aqui modificamos el codigo para separar las tres opciones de impresora
@@ -334,7 +346,9 @@ namespace POSLitePrinterAPI
                     GetPagos(e, orden.POSEncPago, orden.DblTotal),
                     e.PrintLine(""),
                     e.PrintLine(Line),
+                    GetPolitica(e, orden.ticket, "visible_pago"),
                     e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_pago"),
                     e.FullCutAfterFeed(4)
                 )
             );
@@ -368,7 +382,7 @@ namespace POSLitePrinterAPI
                 e.LeftAlign(),
                 e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
                 e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
                 e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
                 e.PrintLine(""),
                 e.CenterAlign(),
@@ -378,7 +392,9 @@ namespace POSLitePrinterAPI
                 GetPagos(e, orden.POSEncPago, orden.DblTotal),
                 e.PrintLine(""),
                 e.PrintLine(Line),
-                e.PrintLine("Gracias por su preferencia!"),
+                GetPolitica(e, orden.ticket, "visible_pago"),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_pago"),
                 e.FullCutAfterFeed(4)
                 )
             );
@@ -412,7 +428,7 @@ namespace POSLitePrinterAPI
                 e.LeftAlign(),
                 e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
                 e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
                 e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
                 e.PrintLine(""),
                 e.CenterAlign(),
@@ -422,7 +438,9 @@ namespace POSLitePrinterAPI
                 GetPagos(e, orden.POSEncPago, orden.DblTotal),
                 e.PrintLine(""),
                 e.PrintLine(Line),
-                e.PrintLine("Gracias por su preferencia!"),
+                GetPolitica(e, orden.ticket, "visible_pago"),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_pago"),
                 e.FullCutAfterFeed(4)
                 )
             );
@@ -456,7 +474,7 @@ namespace POSLitePrinterAPI
                     e.LeftAlign(),
                     e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
                     e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblDescuento.ToString("c") + ")"),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
                     e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
                     e.PrintLine(""),
                     e.CenterAlign(),
@@ -466,7 +484,9 @@ namespace POSLitePrinterAPI
                     GetPagos(e, orden.POSEncPago, orden.DblTotal),
                     e.PrintLine(""),
                     e.PrintLine(Line),
+                    GetPolitica(e, orden.ticket, "visible_pago"),
                     e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_pago"),
                     e.FullCutAfterFeed(4)
                     )
                 );
@@ -488,7 +508,7 @@ namespace POSLitePrinterAPI
                 if (strTitulo == "TICKET CIERRE DE CAJA")
                 {
                     printer.Write(
-                  ByteSplicer.Combine(
+                    ByteSplicer.Combine(
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.SetStyles(PrintStyle.Bold),
@@ -509,7 +529,15 @@ namespace POSLitePrinterAPI
                     e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
                     e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                     e.PrintLine("Monedas:               " + register.DblMonedas),
+                    e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
                     e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    GetPagos(e,register),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -548,7 +576,6 @@ namespace POSLitePrinterAPI
                    e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
                    e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                    e.PrintLine("Monedas:               " + register.DblMonedas),
-                   e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
                    e.CenterAlign(),
                    e.PrintLine(Line),
@@ -573,8 +600,10 @@ namespace POSLitePrinterAPI
             {
                 var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
                 var e = new EPSON();
-                printer.Write(
-                  ByteSplicer.Combine(
+                if (strTitulo == "TICKET CIERRE DE CAJA")
+                {
+                    printer.Write(
+                    ByteSplicer.Combine(
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.SetStyles(PrintStyle.Bold),
@@ -582,10 +611,10 @@ namespace POSLitePrinterAPI
                     e.SetStyles(PrintStyle.None),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Terminal:              " + register.StrTerminal),
+                    e.PrintLine("Terminal:              " + register.StrMaquinaAlta),
                     e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
-                    e.PrintLine("Fecha:                 " + register.DatFecha.Value.ToShortDateString()),
-                    e.PrintLine("Hora:                  " + register.DatFecha.Value.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + register.DatFechaAlta.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFechaAlta.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -595,7 +624,15 @@ namespace POSLitePrinterAPI
                     e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
                     e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                     e.PrintLine("Monedas:               " + register.DblMonedas),
+                    e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
                     e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    GetPagos(e, register),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -609,15 +646,56 @@ namespace POSLitePrinterAPI
                     e.FullCutAfterFeed(4)
                     )
                 );
-
+                }
+                else
+                {
+                    printer.Write(
+                 ByteSplicer.Combine(
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.SetStyles(PrintStyle.Bold),
+                   e.PrintLine(strTitulo),
+                   e.SetStyles(PrintStyle.None),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Terminal:              " + register.StrMaquinaAlta),
+                   e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
+                   e.PrintLine("Fecha:                 " + register.DatFechaAlta.ToShortDateString()),
+                   e.PrintLine("Hora:                  " + register.DatFechaAlta.ToShortTimeString()),
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Billetes 500:          " + register.DblDenominacion500),
+                   e.PrintLine("Billetes 200:          " + register.DblDenominacion200),
+                   e.PrintLine("Billetes 100:          " + register.DblDenominacion100),
+                   e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
+                   e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
+                   e.PrintLine("Monedas:               " + register.DblMonedas),
+                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Comentario:            " + register.StrComentario),
+                   e.PrintLine(""),
+                   e.CenterAlign(),
+                   e.PrintLine("Firma:"),
+                   e.PrintLine(""),
+                   e.PrintLine(""),
+                   e.PrintLine("_________________________"),
+                   e.FullCutAfterFeed(4)
+                   )
+               );
+                }
                 printer.Dispose();
             }
             else if (printer_name[0] == "USB")
             {
                 var printer = new SerialPrinter(printer_name[1], physical_printer.port);
                 var e = new EPSON();
-                printer.Write(
-                  ByteSplicer.Combine(
+                if (strTitulo == "TICKET CIERRE DE CAJA")
+                {
+                    printer.Write(
+                    ByteSplicer.Combine(
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.SetStyles(PrintStyle.Bold),
@@ -625,10 +703,10 @@ namespace POSLitePrinterAPI
                     e.SetStyles(PrintStyle.None),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Terminal:              " + register.StrTerminal),
+                    e.PrintLine("Terminal:              " + register.StrMaquinaAlta),
                     e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
-                    e.PrintLine("Fecha:                 " + register.DatFecha.Value.ToShortDateString()),
-                    e.PrintLine("Hora:                  " + register.DatFecha.Value.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + register.DatFechaAlta.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFechaAlta.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -638,7 +716,15 @@ namespace POSLitePrinterAPI
                     e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
                     e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                     e.PrintLine("Monedas:               " + register.DblMonedas),
+                    e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
                     e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    GetPagos(e, register),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -652,6 +738,46 @@ namespace POSLitePrinterAPI
                     e.FullCutAfterFeed(4)
                     )
                 );
+                }
+                else
+                {
+                    printer.Write(
+                 ByteSplicer.Combine(
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.SetStyles(PrintStyle.Bold),
+                   e.PrintLine(strTitulo),
+                   e.SetStyles(PrintStyle.None),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Terminal:              " + register.StrMaquinaAlta),
+                   e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
+                   e.PrintLine("Fecha:                 " + register.DatFechaAlta.ToShortDateString()),
+                   e.PrintLine("Hora:                  " + register.DatFechaAlta.ToShortTimeString()),
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Billetes 500:          " + register.DblDenominacion500),
+                   e.PrintLine("Billetes 200:          " + register.DblDenominacion200),
+                   e.PrintLine("Billetes 100:          " + register.DblDenominacion100),
+                   e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
+                   e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
+                   e.PrintLine("Monedas:               " + register.DblMonedas),
+                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Comentario:            " + register.StrComentario),
+                   e.PrintLine(""),
+                   e.CenterAlign(),
+                   e.PrintLine("Firma:"),
+                   e.PrintLine(""),
+                   e.PrintLine(""),
+                   e.PrintLine("_________________________"),
+                   e.FullCutAfterFeed(4)
+                   )
+               );
+                }
 
                 printer.Dispose();
             }
@@ -659,8 +785,10 @@ namespace POSLitePrinterAPI
             {
                 var printer = new FilePrinter(printer_name[1]);
                 var e = new EPSON();
-                printer.Write(
-                  ByteSplicer.Combine(
+                if (strTitulo == "TICKET CIERRE DE CAJA")
+                {
+                    printer.Write(
+                    ByteSplicer.Combine(
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.SetStyles(PrintStyle.Bold),
@@ -668,10 +796,10 @@ namespace POSLitePrinterAPI
                     e.SetStyles(PrintStyle.None),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Terminal:              " + register.StrTerminal),
+                    e.PrintLine("Terminal:              " + register.StrMaquinaAlta),
                     e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
-                    e.PrintLine("Fecha:                 " + register.DatFecha.Value.ToShortDateString()),
-                    e.PrintLine("Hora:                  " + register.DatFecha.Value.ToShortTimeString()),
+                    e.PrintLine("Fecha:                 " + register.DatFechaAlta.ToShortDateString()),
+                    e.PrintLine("Hora:                  " + register.DatFechaAlta.ToShortTimeString()),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -681,7 +809,15 @@ namespace POSLitePrinterAPI
                     e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
                     e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                     e.PrintLine("Monedas:               " + register.DblMonedas),
+                    e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
                     e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c")),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    GetPagos(e, register),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
@@ -695,6 +831,46 @@ namespace POSLitePrinterAPI
                     e.FullCutAfterFeed(4)
                     )
                 );
+                }
+                else
+                {
+                    printer.Write(
+                 ByteSplicer.Combine(
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.SetStyles(PrintStyle.Bold),
+                   e.PrintLine(strTitulo),
+                   e.SetStyles(PrintStyle.None),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Terminal:              " + register.StrMaquinaAlta),
+                   e.PrintLine("Usuario:               " + register.StrUsuarioPOS),
+                   e.PrintLine("Fecha:                 " + register.DatFechaAlta.ToShortDateString()),
+                   e.PrintLine("Hora:                  " + register.DatFechaAlta.ToShortTimeString()),
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Billetes 500:          " + register.DblDenominacion500),
+                   e.PrintLine("Billetes 200:          " + register.DblDenominacion200),
+                   e.PrintLine("Billetes 100:          " + register.DblDenominacion100),
+                   e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
+                   e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
+                   e.PrintLine("Monedas:               " + register.DblMonedas),
+                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                   e.CenterAlign(),
+                   e.PrintLine(Line),
+                   e.LeftAlign(),
+                   e.PrintLine("Comentario:            " + register.StrComentario),
+                   e.PrintLine(""),
+                   e.CenterAlign(),
+                   e.PrintLine("Firma:"),
+                   e.PrintLine(""),
+                   e.PrintLine(""),
+                   e.PrintLine("_________________________"),
+                   e.FullCutAfterFeed(4)
+                   )
+               );
+                }
 
                 printer.Dispose();
             }
@@ -763,33 +939,126 @@ namespace POSLitePrinterAPI
             }
             return result;
         }
+        private static byte[] GetPolitica(EPSON e, List<object> ticket, String propiedad)
+        {
+            byte[] result = ByteSplicer.Combine(e.LeftAlign());
+            if (ticket != null)
+            {
+                try
+                {
+
+                    var politica = (JsonElement)ticket.Find(x => ((JsonElement)x).GetProperty("id").ToString() == "politicas_inferior");
+                    var texto = politica.GetProperty("valor").ToString();
+                    var validacion = politica.GetProperty(propiedad).ToString();
+
+                    if (texto != "" && validacion.ToUpper() == "TRUE")
+                    {
+                        result = ByteSplicer.Combine(
+                            result,
+                            e.PrintLine(texto)
+                          );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return result;
+                }
+            }
+            return result;
+        }
+
+        private static byte[] GetFirma(EPSON e, List<object> ticket, String propiedad)
+        {
+            byte[] result = ByteSplicer.Combine(e.CenterAlign());
+            if (ticket != null)
+            {
+                try
+                {
+                    var firma = (JsonElement)ticket.Find(x => ((JsonElement)x).GetProperty("id").ToString() == "firma");
+                    var validacion = firma.GetProperty(propiedad).ToString();
+                    if (validacion.ToUpper() == "TRUE")
+                    {
+                        result = ByteSplicer.Combine(
+                            result,
+                            e.PrintLine(""),
+                            e.PrintLine(""),
+                            e.PrintLine(""),
+                            e.PrintLine(""),
+                            e.PrintLine(""),
+                            e.PrintLine("_____________________________"),
+                            e.PrintLine(""),
+                            e.PrintLine("Firma"),
+                            e.PrintLine(""),
+                            e.PrintLine(""),
+                            e.PrintLine(""),
+                            e.PrintLine(""),
+                            e.PrintLine(""),
+                            e.PrintLine("_____________________________"),
+                            e.PrintLine(""),
+                            e.PrintLine("Nombre"),
+                            e.PrintLine("")
+                          );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return result;
+                }
+            }
+            return result;
+        }
         private static byte[] GetServicio(EPSON e, POSEnc orden)
         {
             byte[] result = ByteSplicer.Combine(e.LeftAlign());
             if (orden.IntPOSTipoServicio == 1)
             {
-                result = ByteSplicer.Combine(
+                if (orden.strHabitacion != null && orden.strHabitacion != "")
+                {
+                    result = ByteSplicer.Combine(
+                    result,
+                    e.PrintLine("Tipo Servicio:         MESA"),
+                    e.PrintLine("Mesa:                  " + orden.StrMesa),
+                    e.PrintLine("Habitacion:            " + orden.strHabitacion),
+                    e.PrintLine("Apellido:              " + orden.strApellidoReferencia)
+                  );
+                }
+                else
+                {
+                    result = ByteSplicer.Combine(
                     result,
                     e.PrintLine("Tipo Servicio:         MESA"),
                     e.PrintLine("Mesa:                  " + orden.StrMesa)
                   );
+                }
+                
             }
             else if (orden.IntPOSTipoServicio == 2)
             {
                 result = ByteSplicer.Combine(
                     result,
-                    e.PrintLine("Tipo Servicio:                 DOMICILIO"),
-                    e.PrintLine("Mesa:                         " + orden.StrMesa)
+                    e.PrintLine("Tipo Servicio:                 DOMICILIO")
                   );
             }
             else if (orden.IntPOSTipoServicio == 3)
             {
-                result = ByteSplicer.Combine(
+                if (orden.strHabitacion != null && orden.strHabitacion != "")
+                {
+                    result = ByteSplicer.Combine(
+                    result,
+                    e.PrintLine("Tipo Servicio:                 LLEVAR"),
+                    e.PrintLine("Clave:                        " + orden.StrMesa),
+                    e.PrintLine("Habitacion:                   " + orden.strHabitacion),
+                    e.PrintLine("Apellido:                     " + orden.strApellidoReferencia)
+                    );
+                }
+                else
+                {
+                    result = ByteSplicer.Combine(
                     result,
                     e.PrintLine("Tipo Servicio:                 LLEVAR"),
                     e.PrintLine("Clave:                        " + orden.StrMesa)
                     );
-
+                }
             }
             return result;
         }
@@ -845,6 +1114,21 @@ namespace POSLitePrinterAPI
 
            
         }
-        
+
+        private static byte[] GetPagos(EPSON e, POSRegister register)
+        {
+            byte[] result = ByteSplicer.Combine(e.CenterAlign(), e.PrintLine("Desglose de Pagos"), e.LeftAlign());
+            if (register.pagos.Count > 0)
+            {
+                foreach (var pago in register.pagos)
+                {
+                    result = ByteSplicer.Combine(
+                       result,
+                       e.PrintLine(pago.nombre + ":         " + pago.importe.Value.ToString("c"))
+                     );
+                }
+            }
+            return result;
+        }
     }
 }
