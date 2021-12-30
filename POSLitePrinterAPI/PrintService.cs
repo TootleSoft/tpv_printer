@@ -13,6 +13,83 @@ namespace POSLitePrinterAPI
     public class PrintService
     {
         public static String Line = "------------------------------------------------";
+
+        public static void Demo(Printer physical_printer)
+        {
+            var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+            var e = new EPSON();
+            printer.Write(ByteSplicer.Combine(
+                    e.CenterAlign(),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.PrintLine("HOLAAAAA"),
+                    e.FullCutAfterFeed(4)));
+            printer.Dispose();
+        }
+
+        private static void StatusChangedCasher(object sender, EventArgs ps)
+        {
+            var status = (PrinterStatusEventArgs)ps;
+            if (status.IsCashDrawerOpen)
+                throw new Exception("No se puede abrir el cajon, ya se encuentra abierto");
+        }
+
+        public static void OpenCashDrawer(Printer physical_printer)
+        {
+            var printer_name = physical_printer.address.Split(":");
+            if (printer_name.Length == 1)
+            {
+                //Por valor predeterminado es NETWORK
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+                //Asignamos la funcion del estatus del cajero
+                printer.StatusChanged += StatusChangedCasher;
+                printer.StartMonitoring();
+                printer.Write(ByteSplicer.Combine(e.CashDrawerOpenPin2(),
+                    e.CashDrawerOpenPin5()));
+                printer.StopMonitoring();
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "NETWORK")
+            {
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON(); 
+                printer.StartMonitoring();
+                printer.Write(ByteSplicer.Combine(e.CashDrawerOpenPin2(),
+                    e.CashDrawerOpenPin5()));
+                printer.StopMonitoring();
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "USB")
+            {
+                var printer = new SerialPrinter(printer_name[1], physical_printer.port);
+                var e = new EPSON();
+                printer.StartMonitoring();
+                printer.Write(ByteSplicer.Combine(e.CashDrawerOpenPin2(),
+                     e.CashDrawerOpenPin5()));
+                printer.StopMonitoring();
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "FILE")
+            {
+                var printer = new FilePrinter(printer_name[1]);
+                var e = new EPSON();
+                printer.StartMonitoring();
+                printer.Write(ByteSplicer.Combine(e.CashDrawerOpenPin2(),
+                    e.CashDrawerOpenPin5()));
+                printer.StopMonitoring();
+                printer.Dispose();
+            }
+        }
         public static void Apertura(Printer printer, POSRegister register)
         {
             Registro(printer, "TICKET APERTURA DE CAJA", register);
@@ -194,9 +271,6 @@ namespace POSLitePrinterAPI
             }
 
         }
-
-   
-
         public static void Cocina(Printer physical_printer, POSEnc orden)
         {
             //Aqui modificamos el codigo para separar las tres opciones de impresora
@@ -348,11 +422,10 @@ namespace POSLitePrinterAPI
                     e.PrintLine(Line),
                     GetPolitica(e, orden.ticket, "visible_pago"),
                     e.PrintLine("Gracias por su preferencia!"),
-                    GetFirma(e, orden.ticket, "visible_pago"),
+                    GetFirma(e, orden.ticket, "visible_pago"), 
                     e.FullCutAfterFeed(4)
                 )
             );
-
                 printer.Dispose();
             }
             else if (printer_name[0] == "NETWORK")
@@ -395,10 +468,9 @@ namespace POSLitePrinterAPI
                 GetPolitica(e, orden.ticket, "visible_pago"),
                     e.PrintLine("Gracias por su preferencia!"),
                     GetFirma(e, orden.ticket, "visible_pago"),
-                e.FullCutAfterFeed(4)
+                    e.FullCutAfterFeed(4)
                 )
             );
-
                 printer.Dispose();
             }
             else if (printer_name[0] == "USB")
@@ -444,7 +516,6 @@ namespace POSLitePrinterAPI
                 e.FullCutAfterFeed(4)
                 )
             );
-
                 printer.Dispose();
             }
             else if (printer_name[0] == "FILE")
@@ -487,10 +558,9 @@ namespace POSLitePrinterAPI
                     GetPolitica(e, orden.ticket, "visible_pago"),
                     e.PrintLine("Gracias por su preferencia!"),
                     GetFirma(e, orden.ticket, "visible_pago"),
-                    e.FullCutAfterFeed(4)
+                   e.FullCutAfterFeed(4)
                     )
                 );
-
                 printer.Dispose();
             }
         }
@@ -966,7 +1036,6 @@ namespace POSLitePrinterAPI
             }
             return result;
         }
-
         private static byte[] GetFirma(EPSON e, List<object> ticket, String propiedad)
         {
             byte[] result = ByteSplicer.Combine(e.CenterAlign());
@@ -1114,7 +1183,6 @@ namespace POSLitePrinterAPI
 
            
         }
-
         private static byte[] GetPagos(EPSON e, POSRegister register)
         {
             byte[] result = ByteSplicer.Combine(e.CenterAlign(), e.PrintLine("Desglose de Pagos"), e.LeftAlign());

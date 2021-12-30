@@ -60,5 +60,19 @@ namespace POSLitePrinterAPI.Controllers
         public IActionResult Load() {
             return Ok("POSPrinterLite funcionando!");
         }
+
+        [HttpPost("CashDrawer")]
+        public IActionResult CashDrawer([FromBody] Entidades.Printer printer)
+        {
+            try
+            {
+                PrintService.OpenCashDrawer(printer);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
