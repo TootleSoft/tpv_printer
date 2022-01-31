@@ -7,6 +7,7 @@ using ESCPOS_NET.Emitters;
 using ESCPOS_NET.Utilities;
 using Entidades;
 using System.Text.Json;
+using System.Globalization;
 
 namespace POSLitePrinterAPI
 {
@@ -35,14 +36,12 @@ namespace POSLitePrinterAPI
                     e.FullCutAfterFeed(4)));
             printer.Dispose();
         }
-
         private static void StatusChangedCasher(object sender, EventArgs ps)
         {
             var status = (PrinterStatusEventArgs)ps;
             if (status.IsCashDrawerOpen)
                 throw new Exception("No se puede abrir el cajon, ya se encuentra abierto");
         }
-
         public static void OpenCashDrawer(Printer physical_printer)
         {
             var printer_name = physical_printer.address.Split(":");
@@ -134,10 +133,10 @@ namespace POSLitePrinterAPI
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
-                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
-                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
                     e.PrintLine(""),
                     e.CenterAlign(),
                     GetPolitica(e, orden.ticket, "visible_preparacion"),
@@ -174,10 +173,10 @@ namespace POSLitePrinterAPI
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
-                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
-                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
                     e.PrintLine(""),
                     e.CenterAlign(),
                     GetPolitica(e, orden.ticket, "visible_preparacion"),
@@ -214,10 +213,10 @@ namespace POSLitePrinterAPI
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
-                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
-                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
                     e.PrintLine(""),
                     e.CenterAlign(),
                     GetPolitica(e, orden.ticket, "visible_preparacion"),
@@ -254,10 +253,10 @@ namespace POSLitePrinterAPI
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
-                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
-                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
                     e.PrintLine(""),
                     e.CenterAlign(),
                     GetPolitica(e, orden.ticket, "visible_preparacion"),
@@ -271,6 +270,184 @@ namespace POSLitePrinterAPI
             }
 
         }
+        public static void Prepago(Printer physical_printer, POSEnc orden)
+        {
+            //Aqui modificamos el codigo para separar las tres opciones de impresora
+            var printer_name = physical_printer.address.Split(":");
+
+            if (printer_name.Length == 1)
+            {
+                //Por valor predeterminado es NETWORK
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+
+                printer.Write(
+                  ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET CLIENTE PREPAGO"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine(""),
+                    e.PrintLine("Propina:                       ________________"),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    GetPolitica(e, orden.ticket, "visible_preparacion"),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_preparacion"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "NETWORK")
+            {
+                var printer = new NetworkPrinter(ipAddress: physical_printer.address, port: physical_printer.port, true);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET CLIENTE PREPAGO"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine(""),
+                    e.PrintLine("Propina:                       ________________"),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    GetPolitica(e, orden.ticket, "visible_preparacion"),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_preparacion"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "USB")
+            {
+                var printer = new SerialPrinter(printer_name[1], physical_printer.port);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET CLIENTE PREPAGO"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine(""),
+                    e.PrintLine("Propina:                       ________________"),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    GetPolitica(e, orden.ticket, "visible_preparacion"),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_preparacion"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+            else if (printer_name[0] == "FILE")
+            {
+                var printer = new FilePrinter(printer_name[1]);
+                var e = new EPSON();
+                printer.Write(
+                  ByteSplicer.Combine(
+                    GetEncabezado(e, orden),
+                    e.PrintLine(Line),
+                    e.SetStyles(PrintStyle.Bold),
+                    e.PrintLine("TICKET CLIENTE PREPAGO"),
+                    e.SetStyles(PrintStyle.None),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("No. Ticket:            " + orden.IntOrden),
+                    GetServicio(e, orden),
+                    e.PrintLine("Caja:                  " + orden.StrTerminal),
+                    e.PrintLine("Fecha:                 " + orden.DatFecha.Value.ToShortDateString() + " " + orden.DatFecha.Value.ToShortTimeString()),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("#           PRECIO             TOTAL"),
+                    GetDetalles(e, orden.POSDet),
+                    e.CenterAlign(),
+                    e.PrintLine(Line),
+                    e.LeftAlign(),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine(""),
+                    e.PrintLine("Propina:                       ________________"),
+                    e.PrintLine(""),
+                    e.CenterAlign(),
+                    GetPolitica(e, orden.ticket, "visible_preparacion"),
+                    e.PrintLine("Gracias por su preferencia!"),
+                    GetFirma(e, orden.ticket, "visible_preparacion"),
+                    e.FullCutAfterFeed(4)
+                    )
+                );
+
+                printer.Dispose();
+            }
+
+        }
+
         public static void Cocina(Printer physical_printer, POSEnc orden)
         {
             //Aqui modificamos el codigo para separar las tres opciones de impresora
@@ -408,10 +585,10 @@ namespace POSLitePrinterAPI
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
-                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
-                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
                     e.PrintLine(""),
                     e.CenterAlign(),
                     e.PrintLine(Line),
@@ -453,10 +630,10 @@ namespace POSLitePrinterAPI
                 e.CenterAlign(),
                 e.PrintLine(Line),
                 e.LeftAlign(),
-                e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
-                e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
-                e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
                 e.PrintLine(""),
                 e.CenterAlign(),
                 e.PrintLine(Line),
@@ -498,10 +675,10 @@ namespace POSLitePrinterAPI
                 e.CenterAlign(),
                 e.PrintLine(Line),
                 e.LeftAlign(),
-                e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
-                e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
-                e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
                 e.PrintLine(""),
                 e.CenterAlign(),
                 e.PrintLine(Line),
@@ -543,10 +720,10 @@ namespace POSLitePrinterAPI
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c")),
-                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c")),
-                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c") + ")"),
-                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c")),
+                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
                     e.PrintLine(""),
                     e.CenterAlign(),
                     e.PrintLine(Line),
@@ -600,11 +777,11 @@ namespace POSLitePrinterAPI
                     e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                     e.PrintLine("Monedas:               " + register.DblMonedas),
                     e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
-                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c", new CultureInfo("en-US"))),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c")),
+                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c", new CultureInfo("en-US"))),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     GetPagos(e,register),
@@ -646,7 +823,7 @@ namespace POSLitePrinterAPI
                    e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
                    e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                    e.PrintLine("Monedas:               " + register.DblMonedas),
-                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c", new CultureInfo("en-US"))),
                    e.CenterAlign(),
                    e.PrintLine(Line),
                    e.LeftAlign(),
@@ -695,11 +872,11 @@ namespace POSLitePrinterAPI
                     e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                     e.PrintLine("Monedas:               " + register.DblMonedas),
                     e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
-                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c", new CultureInfo("en-US"))),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c")),
+                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c", new CultureInfo("en-US"))),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     GetPagos(e, register),
@@ -741,7 +918,7 @@ namespace POSLitePrinterAPI
                    e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
                    e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                    e.PrintLine("Monedas:               " + register.DblMonedas),
-                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c", new CultureInfo("en-US"))),
                    e.CenterAlign(),
                    e.PrintLine(Line),
                    e.LeftAlign(),
@@ -787,11 +964,11 @@ namespace POSLitePrinterAPI
                     e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                     e.PrintLine("Monedas:               " + register.DblMonedas),
                     e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
-                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c", new CultureInfo("en-US"))),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c")),
+                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c", new CultureInfo("en-US"))),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     GetPagos(e, register),
@@ -833,7 +1010,7 @@ namespace POSLitePrinterAPI
                    e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
                    e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                    e.PrintLine("Monedas:               " + register.DblMonedas),
-                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c", new CultureInfo("en-US"))),
                    e.CenterAlign(),
                    e.PrintLine(Line),
                    e.LeftAlign(),
@@ -880,11 +1057,11 @@ namespace POSLitePrinterAPI
                     e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                     e.PrintLine("Monedas:               " + register.DblMonedas),
                     e.PrintLine("Otros Pagos:           " + register.DblOtrosPagos),
-                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                    e.PrintLine("Total:                 " + register.DblImporte.ToString("c", new CultureInfo("en-US"))),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c")),
+                    e.PrintLine("Ventas:            " + register.DblVentas.Value.ToString("c", new CultureInfo("en-US"))),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     GetPagos(e, register),
@@ -926,7 +1103,7 @@ namespace POSLitePrinterAPI
                    e.PrintLine("Billetes 50:           " + register.DblDenominacion50),
                    e.PrintLine("Billetes 20:           " + register.DblDenominacion20),
                    e.PrintLine("Monedas:               " + register.DblMonedas),
-                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c")),
+                   e.PrintLine("Total:                 " + register.DblImporte.ToString("c", new CultureInfo("en-US"))),
                    e.CenterAlign(),
                    e.PrintLine(Line),
                    e.LeftAlign(),
@@ -957,14 +1134,14 @@ namespace POSLitePrinterAPI
                 cambio_total = cambio_total + pago.DblCambio;
                 result = ByteSplicer.Combine(
                     result,
-                    e.PrintLine("("+pago.IntFolio+")" + pago.StrNombre + "      " + pago.StrReferencia + "      " + pago.DblImporte.ToString("c"))
+                    e.PrintLine("("+pago.IntFolio+")" + pago.StrNombre + "      " + pago.StrReferencia + "      " + pago.DblImporte.ToString("c", new CultureInfo("en-US")))
                   );
             }
             result = ByteSplicer.Combine(
                     result,
-                    e.PrintLine("A Pagar:                       " + apagar.ToString("c")),
-                    e.PrintLine("Pagado:                        " + importe_total.ToString("c")),
-                    e.PrintLine("Cambio:                        " + cambio_total.ToString("c"))
+                    e.PrintLine("A Pagar:                       " + apagar.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Pagado:                        " + importe_total.ToString("c", new CultureInfo("en-US"))),
+                    e.PrintLine("Cambio:                        " + cambio_total.ToString("c", new CultureInfo("en-US")))
                   );
             return result;
         }
@@ -1004,7 +1181,7 @@ namespace POSLitePrinterAPI
                     e.CenterAlign(),
                     e.PrintLine(detalle.StrNombre),
                     e.LeftAlign(),
-                    e.PrintLine(detalle.DblCantidad + "           " + detalle.DblPU.ToString("c") + "            " + detalle.DblTotal.ToString("c"))
+                    e.PrintLine(detalle.DblCantidad + "           " + detalle.DblPU.ToString("c", new CultureInfo("en-US")) + "            " + detalle.DblTotal.ToString("c", new CultureInfo("en-US")))
                   );
             }
             return result;
@@ -1192,7 +1369,7 @@ namespace POSLitePrinterAPI
                 {
                     result = ByteSplicer.Combine(
                        result,
-                       e.PrintLine(pago.nombre + ":         " + pago.importe.Value.ToString("c"))
+                       e.PrintLine(pago.nombre + ":         " + pago.importe.Value.ToString("c", new CultureInfo("en-US")))
                      );
                 }
             }

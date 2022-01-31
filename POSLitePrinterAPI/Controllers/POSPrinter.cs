@@ -56,6 +56,13 @@ namespace POSLitePrinterAPI.Controllers
             return Ok();
         }
 
+        [HttpPost("Prepago")]
+        public IActionResult Prepago([FromBody] POSEnc orden)
+        {
+            PrintService.Prepago(orden.POSPrinter, orden);
+            return Ok();
+        }
+
         [HttpGet]
         public IActionResult Load() {
             return Ok("POSPrinterLite funcionando!");
