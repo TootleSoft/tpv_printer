@@ -50,7 +50,11 @@ namespace POSLitePrinterAPI
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "POSLitePrinterAPI v1"));
             app.UseRouting();
-            app.UseCors("AllowAll");
+            app.UseCors(options =>
+                            options
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin());
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

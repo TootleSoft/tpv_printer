@@ -8,12 +8,19 @@ using ESCPOS_NET.Utilities;
 using Entidades;
 using System.Text.Json;
 using System.Globalization;
+using Microsoft.Extensions.Configuration;
 
 namespace POSLitePrinterAPI
 {
     public class PrintService
     {
         public static String Line = "------------------------------------------------";
+
+        private readonly IConfiguration configuration;
+        public PrintService(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
 
         public static void Demo(Printer physical_printer)
         {
@@ -128,20 +135,21 @@ namespace POSLitePrinterAPI
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("#           PRECIO             TOTAL"),
-                    GetDetalles(e, orden.POSDet),
+                    //e.PrintLine("#           PRECIO             TOTAL"),
+                    e.PrintLine("#"),
+                    GetDetalles(e, orden.POSDet,2),
                     e.CenterAlign(),
                     e.PrintLine(Line),
                     e.LeftAlign(),
-                    e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
-                    e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
-                    e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
-                    e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
-                    e.PrintLine(""),
+                    //e.PrintLine("Subtotal:                      " + orden.DblSubtotal.ToString("c", new CultureInfo("en-US"))),
+                    //e.PrintLine("IVA:                           " + orden.DblIVA.ToString("c", new CultureInfo("en-US"))),
+                    //e.PrintLine("Descuento:                    (" + orden.DblImporteDescuento.ToString("c", new CultureInfo("en-US")) + ")"),
+                    //e.PrintLine("Total:                         " + orden.DblTotal.ToString("c", new CultureInfo("en-US"))),
+                    //e.PrintLine(""),
                     e.CenterAlign(),
-                    GetPolitica(e, orden.ticket, "visible_preparacion"),
-                    e.PrintLine("Gracias por su preferencia!"),
-                    GetFirma(e, orden.ticket, "visible_preparacion"),
+                    //GetPolitica(e, orden.ticket, "visible_preparacion"),
+                    //e.PrintLine("Gracias por su preferencia!"),
+                    //GetFirma(e, orden.ticket, "visible_preparacion"),
                     e.FullCutAfterFeed(4)
                     )
                 );
@@ -1185,6 +1193,31 @@ namespace POSLitePrinterAPI
                   );
             }
             return result;
+        }
+
+        private static byte[] GetDetalles(EPSON e, List<POSDet> detalles, int version)
+        {
+            if (version == 1)
+                return GetDetalles(e, detalles);
+            else
+            {
+                byte[] result = ByteSplicer.Combine(e.CenterAlign(), e.PrintLine(Line), e.LeftAlign());
+
+                if (version == 2)
+                {
+                    foreach (var detalle in detalles)
+                    {
+                        result = ByteSplicer.Combine(
+                            result,
+                            e.CenterAlign(),
+                            e.PrintLine(detalle.StrNombre),
+                            e.LeftAlign(),
+                            e.PrintLine(detalle.DblCantidad.ToString())
+                          );
+                    }
+                }
+                return result;
+            }
         }
         private static byte[] GetPolitica(EPSON e, List<object> ticket, String propiedad)
         {
